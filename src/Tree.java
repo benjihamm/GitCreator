@@ -1,64 +1,79 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+//import git.Tree;
+
 public class Tree {
-	private FileWriter output;
+	private static ArrayList<String> list;
+	private String sha;
+
 	
-	public Tree (ArrayList<String> list) throws Exception
+	public Tree (ArrayList<String> listy) throws Exception
 	{
-		FileWriter writer = new FileWriter("output.txt"); 
+		list=  listy;
+//        File f = new File("output.txt");
+//        writeToFile();
+//        sha = sha1();
+        
+    }
+
+	public static String sha1(String s) throws IOException {
+		String sha1 = "";
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-1");
+	        digest.reset();
+	        digest.update(s.getBytes("utf8"));
+	        sha1 = String.format("%040x", new BigInteger(1, digest.digest()));
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return sha1;
+	}
+
+	
+	public void writeToFile() throws IOException {
+		String s = "";
+		for(int i = 0; i < list.size(); i++) {
+			s +=(list.get(i));
+			if (i < list.size()-1) {
+				s += "\n";
+			}
+		}
+		File f = new File("Objects/"+ sha1(s));
+		FileWriter writer = new FileWriter(f); 
 		for(String str: list) {
 		  writer.write(str + System.lineSeparator());
 		}
 		writer.close();
 		
-		String sha = ""; 
-		try {
-            MessageDigest md = MessageDigest.getInstance("SHA1");
-            FileInputStream fis = new FileInputStream("output.txt");
-            byte[] dataBytes = new byte[1024];
+	}
+	
+//	public void createTree(ArrayList<String> list) throws IOException {
+//		new FileWriter(sha, false).close();
+//	}
+	
+	public static void main (String[]args) throws Exception {
+		ArrayList <String> listy = new ArrayList<String>();
+		listy.add("blob : 81e0268c84067377a0a1fdfb5cc996c93f6dcf9f");
+		listy.add("blob : 01d82591292494afd1602d175e165f94992f6f5f");
+		listy.add("blob : f1d82236ab908c86ed095023b1d2e6ddf78a6d83");
+		listy.add("tree : bd1ccec139dead5ee0d8c3a0499b42a7d43ac44b");
+		listy.add("tree : e7d79898d3342fd15daf6ec36f4cb095b52fd976");
+		File file = new File("GitCreator/Objects/dd4840f48a74c1f97437b515101c66834b59b1be");
+		Tree tree = new Tree(listy);
+		tree.writeToFile();
+		//System.out.println(sha1(value));
+	}
+	
 
-            int nread = 0;
-
-            while ((nread = fis.read(dataBytes)) != -1) {
-                md.update(dataBytes, 0, nread);
-            }
-            ;
-
-            byte[] mdbytes = md.digest();
-
-            //convert the byte to hex format
-            StringBuffer sb = new StringBuffer("");
-            for (int i = 0; i < mdbytes.length; i++) {
-                sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16)
-                        .substring(1));
-            }
-            sha = sb.toString();
-        } catch (NoSuchAlgorithmException ex) {
-            throw new RuntimeException(ex);
-        }
-		
-		File pairs = new File("objects/" + sha);
-        pairs.createNewFile();
-        InputStream input = new FileInputStream("output.txt");
-        OutputStream output = new FileOutputStream(pairs);
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = input.read(buffer)) > 0) {
-               output.write(buffer, 0, length);
-               
-        }
-        output.close();
-        input.close();
-		
-    }
+	
+	
+	
+	
+	
 }

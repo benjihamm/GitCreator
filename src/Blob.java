@@ -15,12 +15,13 @@ import java.security.NoSuchAlgorithmException;
 
 public class Blob {
 	String sha;
+	
     public Blob (String fileName) throws Exception {
         File read = new File(fileName);
         sha=getSHA1(read);
         
         
-        File write = new File("objects/"+sha+".txt");
+        File write = new File("Objects/"+sha+".txt");
         write.createNewFile();
         InputStream input = new FileInputStream(read);
         OutputStream output = new FileOutputStream(write);

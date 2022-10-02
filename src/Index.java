@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
+
 public class Index {
 	private HashMap<String, String> blobs;
 	private File index;
@@ -28,9 +29,19 @@ public class Index {
 
 		
 	}
+	public void init() throws FileNotFoundException, IOException{
+		File theDir = new File("Test/objects");
+		if (!theDir.exists()){
+		    theDir.mkdirs();
+		}
+		Path p = Paths.get("Test");
+		File index = new File(p + "/index.txt");
+		index.createNewFile();
+    }
+	
 	public void addBlobs(String fileName) throws Exception
 	{
-		Blob x=new Blob (fileName);
+		Blob x = new Blob (fileName);
 		addToFile(fileName, x.getSHA());
 		
 	}
@@ -51,7 +62,7 @@ public class Index {
 			File tempFile= new File ("temp.txt");
 			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
 			BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-			String lineToRemove =fileName+", "+blobs.get(fileName);
+			String lineToRemove =fileName+": "+blobs.get(fileName);
 			System.out.println (lineToRemove);
 			String currentLine;
 			
@@ -73,4 +84,16 @@ public class Index {
 		}
 		return false;
 	}
+	public static void main (String [] args) throws Exception {
+		Index test = new Index();
+		System.out.println(System.getProperty("user.dir"));
+		test.init();
+		test.addBlobs("junit.txt");
+		test.addBlobs("Main2.txt");
+		test.addBlobs("Main.txt");
+		test.removeBlob("tst");
+		test.removeBlob("tstst");
+	}
+	
+	
 }
