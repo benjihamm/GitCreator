@@ -25,9 +25,7 @@ public class Index {
 		Files.createDirectories(path);
 		index=new File("objects/index.txt");
 		blobs=new HashMap<String,String>();
-		
 
-		
 	}
 	public void init() throws FileNotFoundException, IOException{
 		File theDir = new File("Test/objects");
@@ -48,7 +46,7 @@ public class Index {
 	public void addToFile (String fileName, String shaString) throws IOException
 	{
 		output = new FileWriter(index, true);
-        output.append(fileName+", "+shaString+"\n");
+        output.append(fileName+": "+shaString+"\n");
         blobs.put (fileName,shaString);
         output.close();
         
