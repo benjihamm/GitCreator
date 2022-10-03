@@ -26,7 +26,7 @@ public class Commit {
 		summary=changeLog;
 		date= getDate();
 		comsha1 = getSHA1(summary + date + author);
-		Tree t = new Tree(arr());
+		Tree t = new Tree(list());
 		pointer = t.getTreefilename();
 		createFile();
 		PrintWriter p = new PrintWriter ("Objects/index.txt");
@@ -52,12 +52,12 @@ public class Commit {
 	
 	 public String getDate()
 	 {
-		 Calendar c = Calendar.getInstance();
-		 int mYear = c.get(Calendar.YEAR);
-	   	 int mMonth = c.get(Calendar.MONTH);
-	   	 int mDay = c.get(Calendar.DAY_OF_MONTH);
-		 date = mMonth +"/"+ mDay +"/"+ mYear;
-		 return date;
+			Calendar c = Calendar.getInstance();
+			int mYear = c.get(Calendar.YEAR);
+			int mMonth = c.get(Calendar.MONTH);
+			int mDay = c.get(Calendar.DAY_OF_MONTH);
+			date = mMonth +"/"+ mDay +"/"+ mYear;
+			return date;
 	 }
 	 
 	 public String findPrevious() throws IOException {
@@ -89,7 +89,7 @@ public class Commit {
 		 return comsha1;
 	 }
 	 
-	 public ArrayList <String> arr() throws NoSuchAlgorithmException, IOException{
+	 public ArrayList <String> list() throws NoSuchAlgorithmException, IOException{
 		 BufferedReader s = new BufferedReader(new FileReader("Objects/index.txt"));
 		 ArrayList<String> list = new ArrayList<String>();
 		 while (s.ready()){

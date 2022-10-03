@@ -11,12 +11,14 @@ public class TreeTester {
 		i.addBlobs("Main.txt");
 		Commit c = new Commit("thing", "Jake", null);
 		c.createFile();
-		System.out.println(c.getComSHA());
+		//System.out.println(c.getComSHA());
 		
 		Blob b2 = new Blob("Main2.txt");
 		i.addBlobs("Main2.txt");
 		Commit c2 = new Commit("hello", "Jake", c.getComSHA());
 		c2.createFile();
+		
+
 //		
 //		ArrayList <String> listy = new ArrayList<String>();
 //		listy.add("blob : 81e0268c84067377a0a1fdfb5cc996c93f6dcf9f");
