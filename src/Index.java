@@ -35,6 +35,9 @@ public class Index {
 		Path p = Paths.get("Test");
 		File index = new File(p + "/index.txt");
 		index.createNewFile();
+		File head= new File("head");
+		//create blank file named head
+		//when create commit head shoudl ahve the sha of the most recent commit
     }
 	
 	public void addBlobs(String fileName) throws Exception
@@ -82,6 +85,7 @@ public class Index {
 		}
 		return false;
 	}
+	
 	public static void main (String [] args) throws Exception {
 		Index test = new Index();
 		System.out.println(System.getProperty("user.dir"));

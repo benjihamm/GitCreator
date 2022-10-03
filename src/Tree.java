@@ -10,11 +10,14 @@ import java.util.ArrayList;
 
 public class Tree {
 	private static ArrayList<String> list;
-	private String sha;
+	public String sha;
+	public String parent;
+	private ArrayList<String> total;
 	//private String s;
 	
-	public Tree (ArrayList<String> listy) throws Exception
+	public Tree (ArrayList<String> listy, String parenty) throws Exception
 	{
+		parent = parenty;
 		list = listy;
         writeToFile();
         
@@ -35,7 +38,7 @@ public class Tree {
 
 	public String listToString() {
 		String str = "";
-		for (String s : list) {//create string with all lines in array
+		for (String s : list) {
 			str+=s + "\n";
 		}
 		return str;
@@ -45,11 +48,17 @@ public class Tree {
 		File f = new File("Objects/"+ sha1(listToString()));
 		FileWriter writer = new FileWriter(f); 
 		for (String str : list) {
+			if (str.substring(0,9).equals("*deleted*")) {
+				traverse(parent, str.substring(10));
+//				for (String s: total) {
+//					writer.append(s);
+//			
+			}
 			if (!str.equals("")) {
 			writer.append("blob : " +getSHA(str)+ " " + getFilename(str)+"\n");
 			}
 		}
-		writer.append("tree: " + sha1(listToString()));
+		writer.append("tree : " + parent);
 		writer.close();
 	}
 	public String getSHA(String str) {
@@ -64,13 +73,22 @@ public class Tree {
 		return sha1(listToString());
 	}
 	
+	public void traverse(String parent, String filename) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("Objects/"+parent));
+		String s = br.readLine(); 
+		while(br.ready()) {
+			String current = br.readLine();
+			if (current.substring(current.length() -filename.length()).equals(filename)) {
+				total.add(s);
+				break;
+			}
+			else {
+				total.add(current);
+			}
+		}
+		traverse(s.substring(7), filename);
+	}
 	
 
-	
-
-	
-	
-	
-	
 	
 }

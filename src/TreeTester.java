@@ -18,6 +18,15 @@ public class TreeTester {
 		Commit c2 = new Commit("hello", "Jake", c.getComSHA());
 		c2.createFile();
 		
+		Blob b3 = new Blob("junit.txt");
+		i.addBlobs("junit.txt");
+		Commit c3 = new Commit("hello", "Jake", c2.getComSHA());
+		c3.createFile();
+		
+		Blob b4 = new Blob("Main3.txt");
+		i.addBlobs("Main3.txt");
+		Commit c4 = new Commit("hello", "Jake", c3.getComSHA());
+		c4.createFile();
 
 //		
 //		ArrayList <String> listy = new ArrayList<String>();

@@ -3,6 +3,8 @@ import java.util.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -10,7 +12,7 @@ public class Commit {
 	
 	public String parent;
 	public String pointer;
-	private String pTree;
+	private Tree pTree;
 	private String cTree;
 	private String summary;
 	private String date;
@@ -26,14 +28,18 @@ public class Commit {
 		summary=changeLog;
 		date= getDate();
 		comsha1 = getSHA1(summary + date + author);
-		Tree t = new Tree(list());
+		Tree t = new Tree(list(), findPrevious());
+		//t = pTree;
 		pointer = t.getTreefilename();
 		createFile();
 		PrintWriter p = new PrintWriter ("Objects/index.txt");
 		p.print("");
 		p.close();
 	}
-
+	
+//	public String getTreeName() throws IOException {
+//		return pTree.getTreefilename();
+//	}
 	
 	
 	public String getSHA1(String s) {
@@ -52,19 +58,15 @@ public class Commit {
 	
 	 public String getDate()
 	 {
-			Calendar c = Calendar.getInstance();
-			int mYear = c.get(Calendar.YEAR);
-			int mMonth = c.get(Calendar.MONTH);
-			int mDay = c.get(Calendar.DAY_OF_MONTH);
-			date = mMonth +"/"+ mDay +"/"+ mYear;
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+			LocalDateTime now = LocalDateTime.now();  
+			date = dtf.format(now);  
 			return date;
 	 }
 	 
 	 public String findPrevious() throws IOException {
 		 if (parent != null) {
 			 BufferedReader br = new BufferedReader(new FileReader("Objects/"+ parent));
-			 br.readLine();
-			 br.readLine();
 			 return br.readLine();
 		 }
 		 return "null";
@@ -74,14 +76,22 @@ public class Commit {
 	 {
 		 File file=new File ("Objects/"+comsha1);
 		 FileWriter writer=new FileWriter(file);
-		 pValue = findPrevious();
-//			if(parent == null) {
-//				parent = "null";
-//			}
+		 //pValue = findPrevious();
+		if(parent != null) {
+				BufferedReader br = new BufferedReader(new FileReader("Objects/"+parent));
+				String s = br.readLine() +"\n"+ br.readLine();
+				br.readLine();
+				String s2 = br.readLine() + "\n" + br.readLine() + "\n" + br.readLine();
+				br.close();
+				PrintWriter p = new PrintWriter ("Objects/"+ parent);
+				p.write(s +"\n"+ comsha1 + "\n"+ s2);
+				p.close();
+			}
 			if(pointer == null) {
 				pointer = "null";
 			}
-		 writer.append (pValue +"\n"+parent+"\n"+pointer+"\n"+author+"\n"+date+"\n"+summary);
+			pValue = "null";
+		 writer.append (pointer +"\n"+parent+"\n"+pValue+"\n"+author+"\n"+date+"\n"+summary);
 		 writer.close();
 	 }
 	 
@@ -101,7 +111,12 @@ public class Commit {
 	 
 	 //pValue is the previous commit file, parent is the previous commit sha, pointer is the current tree
 	 
-
+	 public void deleteFile(String filename) throws IOException {
+		 File f = new File("Objects/index.txt");
+		 BufferedWriter fw = new BufferedWriter(new FileWriter(f));
+		 fw.append("*deleted*" + filename);
+		 fw.close();
+	 }
 	 
 	 
 	
