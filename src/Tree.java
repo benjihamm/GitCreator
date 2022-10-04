@@ -48,27 +48,27 @@ public class Tree {
 	public void writeToFile() throws Exception {
 		File f = new File("Objects/"+ sha1(listToString()));
 		FileWriter fw = new FileWriter(f); 
-		for (int i = 0; i < list.size();i++) {
-			if (list.get(i).substring(0,9).equals("*deleted*")) {
-				traverse(parent, list.get(i).substring(10));
-				//Blob blobb = new Blob (list.get(i).substring(11));
-			}
-			else if(list.get(i).substring(0,8).equals(("*edited*"))){
-				traverse(parent, list.get(i).substring(9));
-				Blob blobby = new Blob (list.get(i).substring(9));
-			}
-			else {
-				fw.append("blob : " +getSHA(list.get(i))+ " " + getFilename(list.get(i))+ "\n");
-			}
-		}
 		fw.append("tree : " + parent + "\n");
+		for (int i = 0; i < list.size();i++) {
+				if (list.get(i).substring(0,2).equals("*d")) {
+					traverse(parent, list.get(i).substring(10));
+					//System.out.println(parent);
+				}
+				else if(list.get(i).substring(0,2).equals(("*e"))){
+					traverse(parent, list.get(i).substring(9));
+					Blob blobby = new Blob (list.get(i).substring(9));
+				}
+				else {
+					fw.append("blob : " +getSHA(list.get(i))+ " " + getFilename(list.get(i))+ "\n");
+				}
+		}
 		for(int i = 0; i < total.size(); i++) {
 			fw.append(total.get(i) + "\n");
-			System.out.println(total.get(i));
+			//System.out.println(total.get(i));
 		}
-		
 		fw.close();
 	}
+
 	
 	public String getSHA(String str) {
 		return str.substring(str.length()-40);
@@ -119,8 +119,7 @@ public class Tree {
 	}
 	}
 	
-	 
-	
+
 
 	
 }
