@@ -1,6 +1,6 @@
 //
 //
-//public class Tester {
+//public class IndexTester {
 //	public static void main (String [] args) throws Exception
 //	{
 //		Index i=new Index ();

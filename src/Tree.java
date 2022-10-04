@@ -50,9 +50,6 @@ public class Tree {
 		for (String str : list) {
 			if (str.substring(0,9).equals("*deleted*")) {
 				traverse(parent, str.substring(10));
-//				for (String s: total) {
-//					writer.append(s);
-//			
 			}
 			if (!str.equals("")) {
 			writer.append("blob : " +getSHA(str)+ " " + getFilename(str)+"\n");
@@ -78,7 +75,7 @@ public class Tree {
 		String s = br.readLine(); 
 		while(br.ready()) {
 			String current = br.readLine();
-			if (current.substring(current.length() -filename.length()).equals(filename)) {
+			if (current.contains(filename)) {
 				total.add(s);
 				break;
 			}
