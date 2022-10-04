@@ -29,12 +29,16 @@ public class Commit {
 		date= getDate();
 		comsha1 = getSHA1(summary + date + author);
 		Tree t = new Tree(list(), findPrevious());
-		//t = pTree;
 		pointer = t.getTreefilename();
 		createFile();
+		PrintWriter head = new PrintWriter(new FileWriter("Objects/head"));
+		head.print(comsha1);
+		head.close();
 		PrintWriter p = new PrintWriter ("Objects/index.txt");
 		p.print("");
 		p.close();
+		//create blank file named head
+		//when create commit head shoudl ahve the sha of the most recent commit
 	}
 	
 //	public String getTreeName() throws IOException {
@@ -111,13 +115,6 @@ public class Commit {
 	 
 	 //pValue is the previous commit file, parent is the previous commit sha, pointer is the current tree
 	 
-	 public void deleteFile(String filename) throws IOException {
-		 File f = new File("Objects/index.txt");
-		 BufferedWriter fw = new BufferedWriter(new FileWriter(f));
-		 fw.append("*deleted*" + filename);
-		 fw.close();
-	 }
-	 
-	 
+
 	
 }

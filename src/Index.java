@@ -35,10 +35,21 @@ public class Index {
 		Path p = Paths.get("Test");
 		File index = new File(p + "/index.txt");
 		index.createNewFile();
-		File head= new File("head");
-		//create blank file named head
-		//when create commit head shoudl ahve the sha of the most recent commit
     }
+	
+	 public void deleteFile(String filename) throws IOException {
+		 File f = new File("Objects/index.txt");
+		 BufferedWriter fw = new BufferedWriter(new FileWriter(f));
+		 fw.append("*deleted* " + filename);
+		 fw.close();
+	 }
+	 
+	 public void editedFile(String filename) throws IOException {
+		 File f = new File("Objects/index.txt");
+		 BufferedWriter fw = new BufferedWriter(new FileWriter(f));
+		 fw.append("*edited * " + filename);
+		 fw.close();
+	 }
 	
 	public void addBlobs(String fileName) throws Exception
 	{
@@ -59,7 +70,6 @@ public class Index {
 		if (blobs.containsKey(fileName))
 		{
 			File inputFile=new File("objects/index.txt");
-			
 			File tempFile= new File ("temp.txt");
 			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
 			BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));

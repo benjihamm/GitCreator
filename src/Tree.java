@@ -17,6 +17,7 @@ public class Tree {
 	
 	public Tree (ArrayList<String> listy, String parenty) throws Exception
 	{
+		total = new ArrayList<String>();
 		parent = parenty;
 		list = listy;
         writeToFile();
@@ -44,20 +45,31 @@ public class Tree {
 		return str;
 	}
 	
-	public void writeToFile() throws IOException {
+	public void writeToFile() throws Exception {
 		File f = new File("Objects/"+ sha1(listToString()));
-		FileWriter writer = new FileWriter(f); 
-		for (String str : list) {
-			if (str.substring(0,9).equals("*deleted*")) {
-				traverse(parent, str.substring(10));
+		FileWriter fw = new FileWriter(f); 
+		for (int i = 0; i < list.size();i++) {
+			if (list.get(i).substring(0,9).equals("*deleted*")) {
+				traverse(parent, list.get(i).substring(10));
+				//Blob blobb = new Blob (list.get(i).substring(11));
 			}
-			if (!str.equals("")) {
-			writer.append("blob : " +getSHA(str)+ " " + getFilename(str)+"\n");
+			else if(list.get(i).substring(0,8).equals(("*edited*"))){
+				traverse(parent, list.get(i).substring(9));
+				Blob blobby = new Blob (list.get(i).substring(9));
+			}
+			else {
+				fw.append("blob : " +getSHA(list.get(i))+ " " + getFilename(list.get(i))+ "\n");
 			}
 		}
-		writer.append("tree : " + parent);
-		writer.close();
+		fw.append("tree : " + parent + "\n");
+		for(int i = 0; i < total.size(); i++) {
+			fw.append(total.get(i) + "\n");
+			System.out.println(total.get(i));
+		}
+		
+		fw.close();
 	}
+	
 	public String getSHA(String str) {
 		return str.substring(str.length()-40);
 	}
@@ -70,21 +82,44 @@ public class Tree {
 		return sha1(listToString());
 	}
 	
+	public boolean treeExists(String parent) throws IOException {
+		BufferedReader br2 = new BufferedReader(new FileReader("Objects/"+parent));
+		if(br2.readLine().substring(7) != "null") {
+			return true;
+		}
+		return false;
+	}
+	
 	public void traverse(String parent, String filename) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader("Objects/"+parent));
-		String s = br.readLine(); 
-		while(br.ready()) {
-			String current = br.readLine();
-			if (current.contains(filename)) {
-				total.add(s);
-				break;
-			}
-			else {
-				total.add(current);
+		String s = "";
+		Scanner sc = new Scanner(new File ("Objects/"+parent));
+		if(treeExists(parent)) {
+		    s = sc.next(); 
+		    //s = sc.next();
+			while(sc.hasNext()) {
+				String current = sc.next();
+				if (current.substring(current.length()).equals(filename)) {
+					total.add(s); //adding the line
+					//break;
+				}
+				else {
+					total.add(current);
+				}
 			}
 		}
-		traverse(s.substring(7), filename);
+		else {
+			s = sc.next(); 
+			while(sc.hasNext()) {
+				String current = sc.next();
+				if (!current.contains(filename)) {
+					total.add(current);
+				}
+		}
+		traverse(s.substring(8), filename);
 	}
+	}
+	
+	 
 	
 
 	
